@@ -1,13 +1,12 @@
 package main
 
 import (
+	"github.com/5h1vanshh/retailer-service/cmd"
 	"github.com/5h1vanshh/retailer-service/internal/config"
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	config.ConnectDB()
-	r := gin.Default()
-
+	r := cmd.SetupRouter()
 	r.Run(":8080")
 }
