@@ -10,7 +10,8 @@ import (
 // CheckLastOrderTime checks if the customer is allowed to place an order (5 min cooldown)
 func CheckLastOrderTime(customerID string) (bool, error) {
 	var lastOrder models.Order
-	err := config.DB.Where("customer_id = ?").Order("created_at desc").First(&lastOrder).Error
+	err := config.DB.Where("customer_id = ?", customerID).Order("created_at desc").First(&lastOrder).Error
+
 	if err != nil {
 		return true, nil // No previous orders
 	}

@@ -3,6 +3,7 @@ package config
 import (
 	"log"
 
+	"github.com/5h1vanshh/retailer-service/internal/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -16,4 +17,12 @@ func ConnectDB() {
 		log.Fatal("Failed to connect to database:", err)
 	}
 	DB = db
+
+	// Auto-migrate tables
+	err = DB.AutoMigrate(&models.Product{}, &models.Order{})
+	if err != nil {
+		log.Fatal("Failed to migrate database:", err)
+	}
+
+	log.Println("Database connected and migrated successfully.")
 }
