@@ -22,3 +22,36 @@ func AddProduct(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "product successfully added", "product": product})
 }
+func UpdateProduct(c *gin.Context) {
+	id := c.Param("id")
+
+	var updateData map[string]interface{}
+	if err := c.ShouldBindJSON(&updateData); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := repositories.UpdateProduct(id, updateData); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not update product"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"id": id, "message": "Product updated successfully"})
+}
+func GetProductByID(c *gin.Context) {
+	id := c.Param("id")
+	product, err := repositories.GetProductByID(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
+		return
+	}
+	c.JSON(http.StatusOK, product)
+}
+func GetAllProducts(c *gin.Context) {
+	products, err := repositories.GetAllProducts()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not fetch products"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"products": products})
+}
