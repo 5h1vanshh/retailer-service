@@ -1,9 +1,8 @@
 package handlers
 
 import (
+	"log"
 	"net/http"
-
-	"time"
 
 	"github.com/5h1vanshh/retailer-service/internal/models"
 	"github.com/5h1vanshh/retailer-service/internal/repositories"
@@ -13,19 +12,18 @@ import (
 func AddProduct(c *gin.Context) {
 	var product models.Product
 	if err := c.ShouldBindJSON(&product); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println("JSON Binding Error:", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
 		return
 	}
 
-	// Generate Product ID
-	product.ID = "PROD" + time.Now().Format("20060102150405")
-
 	if err := repositories.CreateProduct(&product); err != nil {
+		log.Println("Database Insert Error:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not create product"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "product successfully added", "product": product})
+	c.JSON(http.StatusCreated, gin.H{"message": "Product created successfully", "product": product})
 }
 
 func UpdateProduct(c *gin.Context) {

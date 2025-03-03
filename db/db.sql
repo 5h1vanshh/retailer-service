@@ -17,3 +17,5 @@ CREATE TABLE orders (
     status ENUM('order placed', 'processed', 'failed') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+show databases
+SHOW TABLES;
